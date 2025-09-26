@@ -65,7 +65,7 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	//validArrayFill();
+	validArrayFill();
 
 	roomPerimeter = 2 * (roomdata[0] + roomdata[1]); //2050
 	roomArea = roomPerimeter * roomdata[2]; //300000 or 307500
