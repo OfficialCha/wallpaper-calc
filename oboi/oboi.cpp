@@ -7,14 +7,16 @@
 
 using namespace std;
 
-int roomdata[3]{ 600,400,300 }; // {}     { 530,530,200 } - значения для теста логики.		Комната  
+int roomdata[3]{ 625,400,300 }; // {}     { 530,530,200 } - значения для теста логики.		Комната  
 int rolldata[2]{ 100,700 }; // {}				{53,1000} - значения для теста логики.			Рулон 
 float roomPerimeter = 0;
 double roomArea = 0;
-float usableRoll = 0; //количество пригодных к использованию отрезков
+float rollArea = 0;
+int usableRoll = 0; //количество пригодных к использованию отрезков
 float lenCount = 0; //количество ширин рулона в длине всех стен
 float buyCount = 0; //сколько надо купить
-float excess = 0;
+float heightExcessPerRoll = 0;
+int excess = 0;
 
 void validArrayFill()
 {
@@ -65,13 +67,23 @@ int main()
 
 	//validArrayFill();
 
-	roomPerimeter = 2 * (roomdata[0] + roomdata[1]); //2120
-	roomArea = roomPerimeter * roomdata[2]; //424000.0
-	usableRoll = floor(rolldata[1] / roomdata[2]); //5
-	lenCount = ceil(roomPerimeter / rolldata[0]); //40.0
-	buyCount = ceil(lenCount / usableRoll); //40.0/5=8
-
-	excess = (((buyCount * (rolldata[0] * rolldata[1])) - roomArea) / roomArea) * 100;
+	roomPerimeter = 2 * (roomdata[0] + roomdata[1]); //2050
+	roomArea = roomPerimeter * roomdata[2]; //300000 or 307500
+	rollArea = rolldata[0] * rolldata[1]; //70000
+	usableRoll = floor(rolldata[1] / roomdata[2]); //2
+	lenCount = (roomPerimeter / rolldata[0]); //20.5
+	buyCount = ceil(ceil(lenCount) / usableRoll); //21/2=11
+	heightExcessPerRoll = (rolldata[1] - (usableRoll * roomdata[2]))*rolldata[0]; //(высотарулона-(полезная высота))*ширинарулона = площадь обрезков по высоте
+	
+	
+	int startExcess1 = (buyCount * rolldata[0] * usableRoll - roomPerimeter);
+	if (!((startExcess1 / 50) % usableRoll == 0))
+	{
+		startExcess1 += (roomdata[2] * startExcess1);//схуяли это работает
+	}
+	
+	
+	excess = (((buyCount * heightExcessPerRoll) + startExcess1) / (buyCount * rollArea)) * 100;
 
 	cout << "Надо купить: " << buyCount << endl;
 	cout << "Избыток: " << excess << "%" << endl;
